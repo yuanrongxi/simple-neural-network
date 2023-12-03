@@ -87,7 +87,7 @@ int main(int argc, char* argv[])
 {
 	srand(time(NULL));
 
-	if (argc == 2 && strcmp(argv[1], "cnn")){
+	if (argc == 2 && strcmp(argv[1], "cnn") == 0){
 		run_cnn(30, 10, 0.1f);
 	}
 	else {
