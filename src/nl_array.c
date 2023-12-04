@@ -208,16 +208,14 @@ nl_array_t* nl_array_div_self(nl_array_t* dst, nl_array_t* src) {
 }
 
 nl_array_t* nl_array_merge_delta(nl_array_t* dst, nl_array_t* delta, float f) {
-	for (int i = 0; i < dst->size; i++) {
+	int i;
+	#pragma omp parallel for
+	for (i = 0; i < dst->size; i++) {
 		dst->data[i] -= f * delta->data[i];
 		delta->data[i] = 0;
 	}
 
 	return dst;
-}
-
-static inline bool can_dot(nl_array_t* dst, nl_array_t* first, nl_array_t* second) {
-	return (first->col == second->row /*&& dst->size >= first->row * second->col*/);
 }
 
 nl_array_t* nl_array_dot(nl_array_t* dst, nl_array_t* first, nl_array_t* second) {
@@ -301,8 +299,6 @@ nl_array_t* nl_array_second_T_dot(nl_array_t* dst, nl_array_t* first, nl_array_t
 static inline float sigmoid(float x) {
 	return (1.0f /(1.0f + expf(-x)));
 }
-
-
 
 nl_array_t* nl_array_sigmoid(nl_array_t* a) {
 	int i;
@@ -401,7 +397,9 @@ nl_array_t* nl_array_softmax(nl_array_t* d, nl_array_t* s) {
 }
 
 nl_array_t* nl_array_relu( nl_array_t* s) {
-	for (int i = 0; i < s->size; i++) {
+	int i;
+	#pragma omp parallel for
+	for (i = 0; i < s->size; i++) {
 		if (s->data[i] < 0)
 			s->data[i] = 0;
 	}
@@ -415,7 +413,9 @@ nl_array_t* nl_array_relu_grad(nl_array_t* in, nl_array_t* delta) {
 		abort();
 	}
 
-	for (int i = 0; i < in->size; i++) {
+	int i;
+	#pragma omp parallel for
+	for (i = 0; i < in->size; i++) {
 		if (in->data[i] <= 0)
 			delta->data[i] = 0;
 	}
