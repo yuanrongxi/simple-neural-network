@@ -17,4 +17,9 @@ Running requires the MNIST data set, which can be downloaded from http://yann.le
 ### Windows
 Visual studio 2013  open nn.sln and compile\run
 
+### MacBook (X86)
+Install llvm with libomp before Compile
 
+```
+brew install llvm libomp
+```
