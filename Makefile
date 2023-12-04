@@ -31,7 +31,7 @@ nn: $(o_file)
 .PHONY :clean
 
 clean:
-	rm -f $(o_file) $(d_file) nn
+	rm -f $(o_file) $(d_file) $(TARGET_NN)
 
 
 -include $(wildcard $(o_file:.o=.d))
