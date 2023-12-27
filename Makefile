@@ -14,8 +14,20 @@ CC_FLAGS	=  -Wall -O -g -fopenmp $(addprefix -I, $(INCLUDE_DIR))  -D_POSIX_C_SOU
 LD_FLAGS	=  -lm
 CC_DEPFLAGS	=-MMD -MF $(@:.o=.d) -MT $@
 TARGET_NN	= nn
+DATADIR		= $(CURRENT_DIR)/data
+MNIST_DATASET_PREPATH	= http://yann.lecun.com/exdb/mnist
 
 all: print_c print_o nn
+
+get_dataset:
+	wget $(MNIST_DATASET_PREPATH)/train-images-idx3-ubyte.gz -O $(DATADIR)/train-images-idx3-ubyte.gz
+	wget $(MNIST_DATASET_PREPATH)/train-labels-idx1-ubyte.gz -O $(DATADIR)/train-labels-idx1-ubyte.gz
+	wget $(MNIST_DATASET_PREPATH)/t10k-images-idx3-ubyte.gz -O $(DATADIR)/t10k-images-idx3-ubyte.gz
+	wget $(MNIST_DATASET_PREPATH)/t10k-labels-idx1-ubyte.gz -O $(DATADIR)/t10k-labels-idx1-ubyte.gz
+	gunzip $(DATADIR)/train-images-idx3-ubyte.gz
+	gunzip $(DATADIR)/train-labels-idx1-ubyte.gz
+	gunzip $(DATADIR)/t10k-images-idx3-ubyte.gz
+	gunzip $(DATADIR)/t10k-labels-idx1-ubyte.gz
 
 print_c:
 	echo $(c_file)
