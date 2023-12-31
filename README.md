@@ -9,6 +9,8 @@ Running requires the MNIST data set, which can be downloaded from http://yann.le
 ### Compile
       cd ./simple-neural-network
       make
+### Download MNIST data set
+      make get_dataset
 ### Run CNN 
 	./nn cnn
 ### Run ANN
