@@ -28,7 +28,6 @@ struct nl_ann {
 /* once allocate memory, no need to allocate memory during program execution */
 static void alloc_run_state(nl_ann_t* ann) {
 	nl_ann_runstate_t* st = run_state(ann);
-	int i;
 	
 	st->signal = (nl_array_t**)malloc(ann->layers *sizeof(nl_array_t*));
 
@@ -39,7 +38,7 @@ static void alloc_run_state(nl_ann_t* ann) {
 	st->delta_w = (nl_array_t**)malloc(ann->op_count * sizeof(nl_array_t*));
 
 	st->signal[0] = NULL; 
-	for (i = 0; i < ann->op_count; i++){
+	for (int i = 0; i < ann->op_count; i++){
 		st->signal[i + 1] = nl_create_array(ann->b[i]->col, ann->b[i]->row);
 		st->delta_b[i] = nl_create_array(ann->b[i]->col, ann->b[i]->row);
 		st->nabla_b[i] = nl_create_array(ann->b[i]->col, ann->b[i]->row);
@@ -49,10 +48,9 @@ static void alloc_run_state(nl_ann_t* ann) {
 }
 
 static void free_run_state(nl_ann_t* ann) {
-	int i;
 	nl_ann_runstate_t* st = run_state(ann);
 
-	for (i = 0; i < ann->op_count; i++){
+	for (int i = 0; i < ann->op_count; i++){
 		nl_free_array(st->signal[i+1]);
 		nl_free_array(st->delta_b[i]);
 		nl_free_array(st->nabla_b[i]);
@@ -99,11 +97,9 @@ nl_ann_t* create_ann(const int sizes[], int n) {
 void destroy_ann(nl_ann_t* nn) {
 	assert(nn != NULL);
 
-	int i;
-
 	free_run_state(nn);
 
-	for (i = 0; i < nn->op_count; i++){
+	for (int i = 0; i < nn->op_count; i++){
 		nl_free_array(nn->w[i]);
 		nl_free_array(nn->b[i]);
 	}
@@ -116,7 +112,7 @@ void destroy_ann(nl_ann_t* nn) {
 
 static int feedforward(nl_ann_t* nn, nl_array_t* a) {
 	int i;
-	nl_array_t* y;
+	nl_array_t* y = NULL;
 	nl_array_t** signal = run_signal(nn);
 	
 	signal[0] = a;
@@ -134,10 +130,9 @@ static int feedforward(nl_ann_t* nn, nl_array_t* a) {
 }
 
 int ann_evaluate(nl_ann_t* nn, nl_data_t* test) {
-	int i;
 	int count = 0;
 
-	for (i = 0; i < test->n; i++) {
+	for (int i = 0; i < test->n; i++) {
 		if (feedforward(nn, &(test->set[i].image)) == test->set[i].label)
 			count++;
 	}
@@ -228,8 +223,8 @@ void ann_log(nl_ann_t* nn) {
 	printf("ann network:\n");
 	printf("\tlayers:%d\n", nn->layers);
 
-	int i, bais = 0, weights = 0;
-	for (i = 0; i < nn->layers - 1; i++) {
+	int bais = 0, weights = 0;
+	for (int i = 0; i < nn->layers - 1; i++) {
 		bais += nn->b[i]->size;
 		weights += nn->w[i]->size;
 	}
